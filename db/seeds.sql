@@ -1,4 +1,4 @@
-USE employees_db
+USE employee_tracker_db
 
 INSERT INTO department (id, name)
 VALUES (1, "Sales"), 
