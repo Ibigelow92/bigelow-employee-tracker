@@ -1,16 +1,24 @@
-USE employees_db
+USE employee_tracker_db
 
+/*So if I'm using a key, do I have to write that particular value in 
+my seeds file?*/
 INSERT INTO department (id, name)
-VALUES (1, "Sales"), 
-       (2, "Accounting"),
-       (3, "Research and development");
+VALUES (001, "Sales"), 
+       (002, "Accounting"),
+       (003, "Research and development");
+
+SELECT * FROM department;
 
 INSERT INTO role (id, title, salary)
-VALUES (4, "Sales associate", 60000),
-       (5, "Accountant", 75000),
-       (6, "Reseatch specialist", 80000);
+VALUES (004, "Sales associate", 60000),
+       (005, "Accountant", 75000),
+       (006, "Reseatch specialist", 80000);
+
+SELECT * FROM role;
 
 INSERT INTO employee (id, first_name, last_name)
-VALUES (7, "Will", "Wilson"),
-       (8, "John", "Johnson"),
-       (9, "Firstnamey", "Lastnamington");
+VALUES (007, "Will", "Wilson"),
+       (008, "John", "Johnson"),
+       (009, "Firstnamey", "astnamington");
+
+SELECT * FROM employee;
