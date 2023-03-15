@@ -2,7 +2,6 @@ const mysql = require('mysql');
 const inquirer = require('inquirer');
 require('console.table');
 
-//Can't get this part to work
 const connection = mysql.createConnection(
     {
       host: 'localhost',
@@ -50,7 +49,7 @@ const promptAction = () => {
                 addEmployee();
                 break;
             case "Update employee role":
-                UpdateRole();
+                updateRole();
                 break;
             case "Quit":
                 process.exit();
@@ -133,11 +132,10 @@ const addRole = () => {
             }
         ])
         // https://dev.mysql.com/doc/refman/8.0/en/insert.html
-        // INSERT INTO tbl_name (put names of columns here) VALUES() (name of columns in same order as previous ser of parenthesis);
+        //example:
         // INSERT INTO role (first_name, last_name, role_id) VALUES ("First", "Last", 1)
-        // id, title, salary, department_id
         .then((answer) => {
-            connection.query('INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)', /*How do you use INSERT to create another row?*/
+            connection.query('INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)',
                 [
                     answer.roleTitle,
                     answer.roleSalary,
@@ -179,7 +177,7 @@ const addEmployee = () => {
         // https://dev.mysql.com/doc/refman/8.0/en/insert.html
         // INSERT INTO tbl_name () VALUES();
         .then((answer) => {
-            connection.query('INSERT INTO employee SET' /*How do you create another row?*/,
+            connection.query('INSERT INTO employee SET',
                 {
                     first_name: answer.firstName,
                     last_name: answer.lastName,
@@ -196,7 +194,59 @@ const addEmployee = () => {
 };
 
 const updateRole = () => {
-    
+    let sql = 'SELECT * FROM employee';
+    let employeeID = 0;
+    connection.query(sql, (err, employee) => {
+        if (err) throw err;
+        connection.query('SELECT * FROM role', (err, roles) => {
+            inquirer
+                .prompt([
+                    {
+                        name: 'employee',
+                        type: 'list',
+                        message: 'Select which employee you want to update',
+                        choices() {
+                            const optionsArray = [];
+                            employee.forEach(({id, first_name, last_name}) => {
+                                optionsArray.push(id + ' ' + first_name + ' ' + last_name)
+                            })
+                            return optionsArray;
+                        }
+                    },
+                    {
+                        name: 'newRole',
+                        type: 'list',
+                        message: 'Select new role',
+                        choices() {
+                            const optionsArray = [];
+                            roles.forEach(({ id, title }) => {
+                                optionsArray.push(id + ' ' + title)
+                            })
+                            return optionsArray;
+                        }
+                    }
+                ])
+                .then((answer) => {
+                    console.log(answer);
+                    connection.query(
+                        'UPDATE employee set ? WHERE ?',
+                        [
+                            {
+                                role_id: answer.newRole.split(' ')[0],
+                            },
+                            {
+                                id: answer.employee.split(' ')[0],
+                            },
+                        ],
+                        (err) => {
+                            if (err) throw err;
+                            console.log('Employee role successfully updated');
+                            promptAction();
+                        }
+                    )
+                })
+        })
+    });
 };
 
 connection.connect((err) => {
