@@ -60,7 +60,7 @@ const promptAction = () => {
 
 // https://dev.mysql.com/doc/refman/8.0/en/select.html
 const viewAllDepartments = () => {
-    connection.query('DESCRIBE department', (err, res) => {
+    connection.query('SELECT * FROM department', (err, res) => {
             if (err) throw err;
             console.table(res);
             promptAction();
@@ -70,7 +70,7 @@ const viewAllDepartments = () => {
 
 // https://dev.mysql.com/doc/refman/8.0/en/select.html
 const viewAllRoles = () => {
-    connection.query('DESCRIBE role', (err, res) => {
+    connection.query('SELECT * FROM role', (err, res) => {
             if (err) throw err;
             console.table(res);
             promptAction();
@@ -79,7 +79,7 @@ const viewAllRoles = () => {
 };
 
 const viewAllEmployees = () => {
-    connection.query('DESCRIBE employee', (err, res) => {
+    connection.query('SELECT * FROM employee', (err, res) => {
             if (err) throw err;
             console.table(res);
             promptAction();
