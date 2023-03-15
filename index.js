@@ -2,6 +2,7 @@ const mysql = require('mysql');
 const inquirer = require('inquirer');
 require('console.table');
 
+//Can't get this part to work
 const connection = mysql.createConnection(
     {
       host: 'localhost',
@@ -57,11 +58,9 @@ const promptAction = () => {
     });
 };
 
+// https://dev.mysql.com/doc/refman/8.0/en/select.html
 const viewAllDepartments = () => {
-    connection.query(
-        // https://dev.mysql.com/doc/refman/8.0/en/select.html
-        'SELECT' /*select what*/,
-        (err, res) => {
+    connection.query('DESCRIBE department', (err, res) => {
             if (err) throw err;
             console.table(res);
             promptAction();
@@ -69,11 +68,9 @@ const viewAllDepartments = () => {
     );
 }
 
+// https://dev.mysql.com/doc/refman/8.0/en/select.html
 const viewAllRoles = () => {
-    connection.query(
-        // https://dev.mysql.com/doc/refman/8.0/en/select.html
-        'SELECT' /*select what*/,
-        (err, res) => {
+    connection.query('DESCRIBE role', (err, res) => {
             if (err) throw err;
             console.table(res);
             promptAction();
@@ -82,10 +79,7 @@ const viewAllRoles = () => {
 };
 
 const viewAllEmployees = () => {
-    connection.query(
-        // https://dev.mysql.com/doc/refman/8.0/en/select.html
-        'SELECT' /*select what*/,
-        (err, res) => {
+    connection.query('DESCRIBE employee', (err, res) => {
             if (err) throw err;
             console.table(res);
             promptAction();
@@ -100,19 +94,19 @@ const addDepartment = () => {
             {
                 name: 'deptName',
                 type: 'input',
-                message: "Enter department name.",
+                message: "Enter department name",
             }
         ])
+        // https://dev.mysql.com/doc/refman/8.0/en/insert.html
+        // INSERT INTO tbl_name () VALUES();
         .then((answer) => {
-            connection.query(
-                // https://dev.mysql.com/doc/refman/8.0/en/insert.html
-                'INSERT //' /*INSERT what where?*/,
-                {
-                    name: answer.deptName,
-                },
+            connection.query('INSERT INTO department (name) VALUES (?)', /*How do you use INSERT to create another row?*/
+                [
+                    answer.deptName
+                ],
                 (err) => {
                     if (err) throw err;
-                    console.log('Successfully added new employee');
+                    console.log('Successfully added new department');
                     promptAction();
                 }
             );
@@ -123,9 +117,9 @@ const addRole = () => {
     inquirer
         .prompt([
             {
-                name: 'roleName',
+                name: 'roleTitle',
                 type: 'input',
-                message: "Enter role name",
+                message: "Enter role title",
             },
             {
                 name: 'roleSalary',
@@ -133,23 +127,25 @@ const addRole = () => {
                 message: "Enter role salary",
             },
             {
-                name: 'roleDepartment',
+                name: 'roleDepartmentID',
                 type: 'input',
-                message: "Enter role department",
+                message: "Enter role department ID",
             }
         ])
+        // https://dev.mysql.com/doc/refman/8.0/en/insert.html
+        // INSERT INTO tbl_name (put names of columns here) VALUES() (name of columns in same order as previous ser of parenthesis);
+        // INSERT INTO role (first_name, last_name, role_id) VALUES ("First", "Last", 1)
+        // id, title, salary, department_id
         .then((answer) => {
-            connection.query(
-                // https://dev.mysql.com/doc/refman/8.0/en/insert.html
-                'INSERT //' /*INSERT what where?*/,
-                {
-                    first_name: answer.roleName,
-                    last_name: answer.roleSalary,
-                    role_id: answer.roleDepartment
-                },
+            connection.query('INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)', /*How do you use INSERT to create another row?*/
+                [
+                    answer.roleTitle,
+                    answer.roleSalary,
+                    answer.roleDepartmentID
+                ],
                 (err) => {
                     if (err) throw err;
-                    console.log('Successfully added new employee');
+                    console.log('Successfully added new role');
                     promptAction();
                 }
             );
@@ -180,10 +176,10 @@ const addEmployee = () => {
                 message: "Enter employee's manager ID",
             }
         ])
+        // https://dev.mysql.com/doc/refman/8.0/en/insert.html
+        // INSERT INTO tbl_name () VALUES();
         .then((answer) => {
-            connection.query(
-                // https://dev.mysql.com/doc/refman/8.0/en/insert.html
-                'INSERT //' /*INSERT what where?*/,
+            connection.query('INSERT INTO employee SET' /*How do you create another row?*/,
                 {
                     first_name: answer.firstName,
                     last_name: answer.lastName,
@@ -203,8 +199,9 @@ const updateRole = () => {
     
 };
 
-connection = () => {
+connection.connect((err) => {
     if (err) throw err;
     console.log('Running employee tracker CMS')
     promptAction();
-};
+}
+)
