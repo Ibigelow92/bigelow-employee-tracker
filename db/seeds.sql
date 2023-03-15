@@ -1,4 +1,4 @@
-USE employee_tracker_db
+USE employee_tracker_db;
 
 /*So if I'm using a key, do I have to write that particular value in 
 my seeds file?*/
