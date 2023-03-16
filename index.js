@@ -200,59 +200,7 @@ const addEmployee = () => {
 };
 
 const updateRole = () => {
-    let sql = 'SELECT * FROM employee';
-    let employeeID = 0;
-    connection.query(sql, (err, employee) => {
-        if (err) throw err;
-        connection.query('SELECT * FROM role', (err, roles) => {
-            inquirer
-                .prompt([
-                    {
-                        name: 'employee',
-                        type: 'list',
-                        message: 'Select which employee you want to update',
-                        choices() {
-                            const optionsArray = [];
-                            employee.forEach(({id, first_name, last_name}) => {
-                                optionsArray.push(id + ' ' + first_name + ' ' + last_name)
-                            })
-                            return optionsArray;
-                        }
-                    },
-                    {
-                        name: 'newRole',
-                        type: 'list',
-                        message: 'Select new role',
-                        choices() {
-                            const optionsArray = [];
-                            roles.forEach(({ id, title }) => {
-                                optionsArray.push(id + ' ' + title)
-                            })
-                            return optionsArray;
-                        }
-                    }
-                ])
-                .then((answer) => {
-                    console.log(answer);
-                    connection.query(
-                        'UPDATE employee set ? WHERE ?',
-                        [
-                            {
-                                role_id: answer.newRole.split(' ')[0],
-                            },
-                            {
-                                id: answer.employee.split(' ')[0],
-                            },
-                        ],
-                        (err) => {
-                            if (err) throw err;
-                            console.log('Employee role successfully updated');
-                            promptAction();
-                        }
-                    )
-                })
-        })
-    });
+
 };
 
 connection.connect((err) => {
