@@ -150,6 +150,12 @@ const addRole = () => {
         });
 };
 
+// sqlMessage: 'Cannot add or update a child row: a foreign key constraint fails 
+// (`employee_tracker_db`.`employee`, CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`role_id`) 
+// REFERENCES `role` (`id`) ON DELETE SET NULL)',
+// Error: ER_NO_REFERENCED_ROW_2: Cannot add or update a child row: a foreign key constraint fails 
+// (`employee_tracker_db`.`employee`, CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`role_id`)
+// REFERENCES `role` (`id`) ON DELETE SET NULL)
 const addEmployee = () => {
     inquirer
         .prompt([
@@ -177,13 +183,13 @@ const addEmployee = () => {
         // https://dev.mysql.com/doc/refman/8.0/en/insert.html
         // INSERT INTO tbl_name () VALUES();
         .then((answer) => {
-            connection.query('INSERT INTO employee SET',
-                {
-                    first_name: answer.firstName,
-                    last_name: answer.lastName,
-                    role_id: answer.roleID,
-                    manager_id: answer.managerID
-                },
+            connection.query('INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)',
+                [
+                    answer.firstName,
+                    answer.lastName,
+                    answer.roleID,
+                    answer.managerID
+                ],
                 (err) => {
                     if (err) throw err;
                     console.log('Successfully added new employee');
