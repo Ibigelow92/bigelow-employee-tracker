@@ -52,5 +52,5 @@ SOFTWARE.
 
 ## Tests
 
-Go the extra mile and write tests for your application. Then provide examples on how to run them here.
+After you install all the dependencies and initiate your MySql files, open "index.js" in the integrated terminal. Type "node index.js" and press enter. This should produce a list of options concerning how you wish to modify the database. When you click "Add employee", you should be asked to input the employee's first name, last name, role ID and manager ID. If it is successful, you should receive a message saying the employee was successfully added. After that, the app should display the main prompt once again. If you click "Add role", you should be asked to input the title, salary and department ID of the role. If you click "Add department", it should simply ask you the department name. For each, if it is successful, you will get a message in the console saying as much. When you choose to view the employees, roles, or departments, it should return a table containing the information you requested. If you select "update employee role", you should get a message asking which employee you want to update and which role you want to assign them. You will not be able to see the table immediately, but should get a message saying if it was successful. To view the updated information, simply use the prompt to view the table.
 
